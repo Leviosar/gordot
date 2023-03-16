@@ -14,8 +14,13 @@ class MainWindow(QMainWindow):
 
         horizontal_layout = QHBoxLayout(window)
 
-        horizontal_layout.addWidget(Sidebar())
-        horizontal_layout.addWidget(Viewport())
+        viewport = Viewport()
+
+        horizontal_layout.addWidget(Sidebar(viewport), 1)
+        horizontal_layout.addWidget(viewport, 3)
+        # horizontal_layout.addWidget(Sidebar(viewport), 1)
+
+        self.resize(1920 // 2, 1080 // 2)
 
         self.setCentralWidget(window)
 

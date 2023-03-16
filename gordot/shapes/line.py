@@ -4,6 +4,7 @@ from PyQt5.QtGui import QPainter
 
 from gordot.shapes import Shape
 from gordot.utils import Coord
+from gordot.structures.view import View
 
 class Line(Shape):
 
@@ -16,8 +17,14 @@ class Line(Shape):
         self.start = start
         self.end = end
 
-    def draw(self, painter: QPainter):
+    def draw(self, painter: QPainter, viewport: View, window: View):
+        print(self.name)
+        print([self.start, self.end])
+        start = self.start.transform(window, viewport)
+        end = self.end.transform(window, viewport)
+        print([start, end])
+
         painter.drawLine(
-            self.start.x, self.start.y,
-            self.end.x, self.end.y
+            int(start.x), int(start.y),
+            int(end.x), int(end.y)
         )

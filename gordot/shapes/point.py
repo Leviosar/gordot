@@ -4,6 +4,7 @@ from PyQt5.QtGui import QPainter
 
 from gordot.shapes.shape import Shape
 from gordot.utils.coord import Coord
+from gordot.structures.view import View
 
 class Point(Shape):
 
@@ -13,5 +14,7 @@ class Point(Shape):
         self.coord = coord
         super().__init__(name, color)
 
-    def draw(self, painter: QPainter) -> None:
-        painter.drawPoint(self.coord.x, self.coord.y)
+    def draw(self, painter: QPainter, viewport: View, window: View) -> None:
+        coord = self.coord.transform(window, viewport)
+
+        painter.drawPoint(int(coord.x), int(coord.y))
