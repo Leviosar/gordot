@@ -6,6 +6,7 @@ class ToolsMenu(QWidget):
 
         tabs = [
             { "widget": ZoomTool(viewport), "name": "Zoom"},
+            { "widget": PanTool(viewport), "name": "Move"},
         ]
 
         tab_bar = QTabWidget()
@@ -36,3 +37,28 @@ class ZoomTool(QWidget):
         layout.addWidget(self.zoom_in)
 
         self.setLayout(layout)
+
+class PanTool(QWidget):
+    def __init__(self, viewport):
+        super().__init__()
+
+        self.viewport = viewport
+
+        self.up = QPushButton("Up")
+        self.down = QPushButton("Down")
+        self.left = QPushButton("Left")
+        self.right = QPushButton("Right")
+
+        self.up.clicked.connect(lambda: self.viewport.move_up(15))
+        self.down.clicked.connect(lambda: self.viewport.move_down(15))
+        self.left.clicked.connect(lambda: self.viewport.move_left(15))
+        self.right.clicked.connect(lambda: self.viewport.move_right(15))
+
+        layout = QVBoxLayout()
+        layout.addWidget(self.up)
+        layout.addWidget(self.down)
+        layout.addWidget(self.left)
+        layout.addWidget(self.right)
+
+        self.setLayout(layout)
+
