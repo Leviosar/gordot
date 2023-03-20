@@ -12,7 +12,7 @@ class View:
 
     def height(self):
         return self.ymax - self.ymin
-    
+
     def __str__(self) -> str:
         return f"""View(
             [{self.xmin} {self.ymin}],

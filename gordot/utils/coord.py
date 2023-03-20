@@ -10,12 +10,7 @@ class Coord:
 
     def transform(self, origin: View, destiny: View) -> 'Coord':
         x = (self.x - origin.xmin) / (origin.xmax - origin.xmin) * (destiny.xmax - destiny.xmin)
-        # x = (destiny.xmax - destiny.xmin)
-        # x *= (self.x - origin.xmin)
-        # x /= (origin.xmax - origin.xmin)
         y = (1 - (self.y - origin.ymin) / (origin.ymax - origin.ymin)) * (destiny.ymax - destiny.ymin)
-        # y = (self.y - origin.ymin) / (origin.ymax - origin.ymin)
-        # y *= (destiny.ymax - destiny.ymin)
 
         return Coord(x, y)
     
