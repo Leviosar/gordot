@@ -6,7 +6,7 @@ from PyQt5.QtCore import Qt
 
 from gordot.shapes import Shape, Point, Line, Triangle
 from gordot.utils import Coord
-from gordot.structures.view import View
+from gordot.structures import View
 
 test_shapes = [
     Point(Coord(0, 0), "Pontinho", (0, 0 , 0)),
@@ -47,18 +47,11 @@ class Viewport(QWidget):
 
         self.painter.end()
 
-    
     def resizeEvent(self, event) -> None:
         super().resizeEvent(event)
-        
+
         self.viewport_dimensions = View(0, 0, self.width(), self.height())
         self.window_dimensions = View(0, 0, self.width(), self.height())
-
-        # self.display_file.append(Line(
-        #     Coord(0, 0),
-        #     Coord(self.width() / 2, self.height() / 2),
-        #     'Linha diagonal'
-        # ))
 
     def setBackgroundColor(self, red: int, green: int, blue: int):
         self.setAutoFillBackground(True)
@@ -68,23 +61,52 @@ class Viewport(QWidget):
 
         self.setPalette(palette)
 
+    def move_up(self, pixels: int):
+        self.window_dimensions.ymin -= pixels
+        self.window_dimensions.ymax -= pixels
+
+        self.repaint()
+
+    def move_down(self, pixels: int):
+        self.window_dimensions.ymin += pixels
+        self.window_dimensions.ymax += pixels
+
+        self.repaint()
+
+    def move_left(self, pixels: int):
+        self.window_dimensions.xmin += pixels
+        self.window_dimensions.xmax += pixels
+
+        self.repaint()
+    
+    def move_right(self, pixels: int):
+        self.window_dimensions.xmin -= pixels
+        self.window_dimensions.xmax -= pixels
+
+        self.repaint()
+
     def zoom_in(self, factor):
         w = self.window_dimensions.width() * factor / 2
         h = self.window_dimensions.height() * factor / 2
+
         self.window_dimensions.xmin += w
         self.window_dimensions.xmax -= w
         self.window_dimensions.ymin += h
         self.window_dimensions.ymax -= h
+
         self.repaint()
 
     def zoom_out(self, factor):
         w = self.window_dimensions.width() * factor / 2
         h = self.window_dimensions.height() * factor / 2
+
         self.window_dimensions.xmin -= w
         self.window_dimensions.xmax += w
         self.window_dimensions.ymin -= h
         self.window_dimensions.ymax += h
+
         self.repaint()
+
 
 def initPen(color: Tuple[int, int, int]) -> QPen:
     pen = QPen()
