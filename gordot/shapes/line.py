@@ -4,7 +4,7 @@ from PyQt5.QtGui import QPainter
 
 from gordot.shapes import Shape
 from gordot.utils import Coord
-from gordot.structures.view import View
+from gordot.structures import View, Vec2D
 
 class Line(Shape):
 
@@ -28,3 +28,7 @@ class Line(Shape):
             int(start.x), int(start.y),
             int(end.x), int(end.y)
         )
+
+    def move(self, vec: Vec2D) -> None:
+        self.start += vec
+        self.end += vec

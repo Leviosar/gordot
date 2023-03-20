@@ -2,9 +2,9 @@ from typing import Tuple
 
 from PyQt5.QtGui import QPainter
 
-from gordot.shapes.shape import Shape
+from gordot.shapes import Shape
 from gordot.utils.coord import Coord
-from gordot.structures.view import View
+from gordot.structures import View, Vec2D
 
 class Point(Shape):
 
@@ -18,3 +18,6 @@ class Point(Shape):
         coord = self.coord.transform(window, viewport)
 
         painter.drawPoint(int(coord.x), int(coord.y))
+
+    def move(self, vec: Vec2D) -> None:
+        self.coord += vec

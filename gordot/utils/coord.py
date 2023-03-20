@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from gordot.structures.view import View
+from gordot.structures import View, Vec2D
 
 @dataclass
 class Coord:
@@ -19,5 +19,11 @@ class Coord:
 
         return Coord(x, y)
     
+    def __add__(self, other: Vec2D):
+        new_x = self.x + other.x
+        new_y = self.y + other.y
+
+        return Coord(new_x, new_y)
+
     def __str__(self) -> str:
         return f"(x: {self.x}, y: {self.y})"
