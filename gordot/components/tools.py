@@ -1,13 +1,17 @@
-from PyQt5.QtWidgets import QTabWidget, QWidget, QVBoxLayout, QPushButton, QHBoxLayout, QLabel, QLineEdit, QFormLayout
+from PyQt5.QtWidgets import QTabWidget, QWidget, QVBoxLayout, QPushButton, QHBoxLayout, QLabel, QLineEdit, QFormLayout, QTableWidget, QTableWidgetItem, QTreeView
+from PyQt5.QtGui import QStandardItemModel, QColor, QBrush, QStandardItem
 
 from gordot.utils import Coord
 from gordot.shapes import Point, Line, Shape
+from gordot.components.viewport import Viewport
+from PyQt5.QtCore import Qt, pyqtSignal
 
 class ToolsMenu(QWidget):
     def __init__(self, viewport):
         super().__init__()
 
         tabs = [
+            { "widget": ShapeList(viewport), "name": "Objects2"},
             { "widget": ZoomTool(viewport), "name": "Zoom"},
             { "widget": PanTool(viewport), "name": "Move"},
             { "widget": ObjectsCreationTool(viewport), "name": "Objects"},
@@ -162,3 +166,71 @@ class LineTab(ObjectCreatorTab):
         )
 
         self.add_shape(line)
+
+data = {'col1':['1','2','3','4'],
+        'col2':['1','2','1','3'],
+        'col3':['1','1','2','1']}
+
+class ShapeList(QWidget):
+    def __init__(self, viewport):
+        super().__init__()
+
+        self.viewport = viewport
+        # self.viewport.shapeModified.connect(self.update)
+
+        self.table = Table()
+        self.table.setHorizontalHeaderLabels(["NAME", "SHAPE", "COLOR"])
+        self.table.itemSelected.connect(self.selection_callback)
+
+        layout = QVBoxLayout()
+        layout.addWidget(self.table)
+
+        self.setLayout(layout)
+        self.update()
+
+    def selected_index(self):
+        return self.table.currentIndex().row()
+
+    def selection_callback(self):
+        i = self.table.currentIndex().row()
+        self.viewport.selected_shape = self.viewport.get_shape_by_index(i)
+
+    def delete_callback(self):
+        selected = self.viewport.selected_shape
+        self.viewport.remove_shape(selected)
+
+    def populate_tree(self):
+        self.table.clearRows()
+
+        for shape in self.viewport.display_file:
+            name = QStandardItem(str(shape.name))
+            types = QStandardItem(shape.__class__.__name__)
+            color = QStandardItem()
+            color.setBackground(QBrush(QColor(*shape.color)))
+            self.table.appendRow([name, types, color])
+
+    def update(self):
+        self.populate_tree()
+        super().update()
+
+class Table(QTreeView):
+    itemSelected = pyqtSignal()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.model = QStandardItemModel(0, 3)
+        self.setModel(self.model)
+
+    def setHorizontalHeaderLabels(self, *args, **kwargs):
+        self.model.setHorizontalHeaderLabels(*args, **kwargs)
+
+    def appendRow(self, *args, **kwargs):
+        self.model.appendRow(*args, **kwargs)
+
+    def clearRows(self):
+        self.model.removeRows(0, self.model.rowCount())
+
+    def selectionChanged(self, selected, deselected):
+        super().selectionChanged(selected, deselected)
+        self.itemSelected.emit()
+
