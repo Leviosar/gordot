@@ -36,6 +36,11 @@ class Viewport(QWidget):
         self.setBackgroundColor(255, 255, 0)
 
 
+    def add_shape(self, shape: Shape):
+        self.display_file.append(shape)
+
+        self.repaint()
+
     def paintEvent(self, event):
         self.painter.begin(self)
 
