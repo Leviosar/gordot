@@ -10,9 +10,5 @@ class Sidebar(QWidget):
 
         self.sidebar_layout.addWidget(ToolsMenu(viewport))
 
-        widgets = [QPushButton(f'butao {i}') for i in range(10)]
-        for w in widgets:
-            self.sidebar_layout.addWidget(w)
-
         self.setLayout(self.sidebar_layout)
 
