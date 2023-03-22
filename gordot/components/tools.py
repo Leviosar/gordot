@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QTabWidget, QWidget, QVBoxLayout, QPushButton, QHBox
 from PyQt5.QtGui import QStandardItemModel, QColor, QBrush, QStandardItem
 
 from gordot.utils import Coord
-from gordot.shapes import Point, Line, Shape
+from gordot.shapes import Point, Line, Shape, Wireframe
 from gordot.components import Viewport
 from PyQt5.QtCore import Qt, pyqtSignal
 
@@ -175,18 +175,20 @@ class WireframeTab(ObjectCreatorTab):
         self.sides = 3
         
         self.lines = []
+        self.x_lineEdits = []
+        self.y_lineEdits = []
 
-        for side in range(self.sides):
+        for i in range(self.sides):
             row = QHBoxLayout()
             
-            x = QLineEdit()
-            x.setPlaceholderText("X")
+            self.x_lineEdits.append(QLineEdit())
+            self.x_lineEdits[i].setPlaceholderText("X")
             
-            y = QLineEdit()
-            y.setPlaceholderText("Y")
+            self.y_lineEdits.append(QLineEdit())
+            self.y_lineEdits[i].setPlaceholderText("Y")
             
-            row.addWidget(x)
-            row.addWidget(y)
+            row.addWidget(self.x_lineEdits[i])
+            row.addWidget(self.y_lineEdits[i])
             
             self.lines.append(row)
 
@@ -197,23 +199,20 @@ class WireframeTab(ObjectCreatorTab):
         for line in self.lines:
             layout.addRow(line)
 
-        add_button = QPushButton("+")
-        # add_button.clicked.connect(self.add_point)
-        # layout.addRow()
         layout.addRow(self.create_button)
 
         self.setLayout(layout)
 
     def create_callback(self):
-        x1 = int(self.x1_lineEdit.text())
-        y1 = int(self.y1_lineEdit.text())
-        x2 = int(self.x2_lineEdit.text())
-        y2 = int(self.y2_lineEdit.text())
+        coords = [
+            Coord(
+                int(self.x_lineEdits[i].text()),
+                int(self.y_lineEdits[i].text())
+            )
 
-        line = Line(
-            Coord(x1, y1),
-            Coord(x2, y2),
-            self.name_lineEdit.text()
-        )
+            for i in range(len(self.x_lineEdits))
+        ]
 
-        self.add_shape(line)
+        wireframe = Wireframe(coords, self.name_lineEdit.text())
+
+        self.add_shape(wireframe)
