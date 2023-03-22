@@ -1,38 +1,28 @@
-from typing import Tuple
+from typing import List, Tuple
 
 from PyQt5.QtGui import QPainter
 
 from gordot.shapes import Shape
 from gordot.utils import Coord
+from gordot.structures import View
 
 class Wireframe(Shape):
 
-    coord1: Coord
-    coord2: Coord
-    coord3: Coord
+    coords: List[Coord]
 
-    def __init__(self, coord1: Coord, coord2: Coord, coord3: Coord, name: str, color: Tuple[int, int, int] = (0, 0, 0)):
+    def __init__(self, coords: List[Coord], name: str, color: Tuple[int, int, int] = (0, 0, 0)):
         super().__init__(name, color)
 
-        self.coord1 = coord1
-        self.coord2 = coord2
-        self.coord3 = coord3
+        self.coords = coords
 
-    def draw(self, painter: QPainter):
-        painter.drawLine(
-            self.coord1.x, self.coord1.y,
-            self.coord2.x, self.coord2.y
-        )
+    def draw(self, painter: QPainter, viewport: View, window: View):
+        num_coords = len(self.coords)
 
-        painter.drawLine(
-            self.coord2.x, self.coord2.y,
-            self.coord3.x, self.coord3.y
-        )
+        for i in range(num_coords):
+            current = self.coords[i].transform(window, viewport)
+            next = self.coords[(i + 1) % num_coords].transform(window, viewport)
 
-        painter.drawLine(
-            self.coord3.x, self.coord3.y,
-            self.coord1.x, self.coord1.y
-        )
-
-
-
+            painter.drawLine(
+                int(current.x), int(current.y),
+                int(next.x), int(next.y)
+            )
