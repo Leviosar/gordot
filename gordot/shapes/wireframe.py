@@ -5,7 +5,7 @@ from PyQt5.QtGui import QPainter
 from gordot.shapes import Shape
 from gordot.utils import Coord
 
-class Polygon(Shape):
+class Wireframe(Shape):
 
     coord1: Coord
     coord2: Coord

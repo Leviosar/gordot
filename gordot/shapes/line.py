@@ -18,11 +18,8 @@ class Line(Shape):
         self.end = end
 
     def draw(self, painter: QPainter, viewport: View, window: View):
-        print(self.name)
-        print([self.start, self.end])
         start = self.start.transform(window, viewport)
         end = self.end.transform(window, viewport)
-        print([start, end])
 
         painter.drawLine(
             int(start.x), int(start.y),

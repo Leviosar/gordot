@@ -2,43 +2,27 @@ from typing import List, Tuple
 
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QPainter, QColor, QFont, QBrush, QPen, QPalette
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 
 from gordot.shapes import Shape, Point, Line, Triangle
 from gordot.utils import Coord
 from gordot.structures import View
 
-test_shapes = [
-    Point(Coord(0, 0), "Pontinho", (0, 0 , 0)),
-    Line(
-        Coord(250, 250),
-        Coord(300, 300),
-        "Minha linhazinha"
-    ),
-    # Triangle(
-    #     Coord(150, 200),
-    #     Coord(300, 200),
-    #     Coord(250, 100),
-    #     "Meu trigozinho"
-    # )
-]
-
 class Viewport(QWidget):
+
+    display_file_changed = pyqtSignal()
+    
     def __init__(self):
         super(Viewport, self).__init__()
         
-        self.display_file: List[Shape] = test_shapes
-
-        
+        self.display_file: List[Shape] = []
 
         self.painter = QPainter()
-
-        self.setBackgroundColor(255, 255, 0)
 
 
     def add_shape(self, shape: Shape):
         self.display_file.append(shape)
-
+        self.display_file_changed.emit()
         self.repaint()
 
     def paintEvent(self, event):

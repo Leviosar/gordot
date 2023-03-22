@@ -3,7 +3,7 @@ from PyQt5.QtGui import QStandardItemModel, QColor, QBrush, QStandardItem
 
 from gordot.utils import Coord
 from gordot.shapes import Point, Line, Shape
-from gordot.components.viewport import Viewport
+from gordot.components import Viewport
 from PyQt5.QtCore import Qt, pyqtSignal
 
 class ToolsMenu(QWidget):
@@ -11,7 +11,6 @@ class ToolsMenu(QWidget):
         super().__init__()
 
         tabs = [
-            { "widget": ShapeList(viewport), "name": "Objects2"},
             { "widget": ZoomTool(viewport), "name": "Zoom"},
             { "widget": PanTool(viewport), "name": "Move"},
             { "widget": ObjectsCreationTool(viewport), "name": "Objects"},
@@ -77,6 +76,7 @@ class ObjectsCreationTool(QWidget):
         tabs = [
             { "widget": PointTab(viewport), "name": "Point"},
             { "widget": LineTab(viewport), "name": "Line"},
+            { "widget": WireframeTab(viewport), "name": "Wireframe"},
         ]
 
         tab_bar = QTabWidget()
@@ -167,70 +167,53 @@ class LineTab(ObjectCreatorTab):
 
         self.add_shape(line)
 
-data = {'col1':['1','2','3','4'],
-        'col2':['1','2','1','3'],
-        'col3':['1','1','2','1']}
 
-class ShapeList(QWidget):
+class WireframeTab(ObjectCreatorTab):
     def __init__(self, viewport):
-        super().__init__()
+        super().__init__(viewport)
 
-        self.viewport = viewport
-        # self.viewport.shapeModified.connect(self.update)
+        self.sides = 3
+        
+        self.lines = []
 
-        self.table = Table()
-        self.table.setHorizontalHeaderLabels(["NAME", "SHAPE", "COLOR"])
-        self.table.itemSelected.connect(self.selection_callback)
+        for side in range(self.sides):
+            row = QHBoxLayout()
+            
+            x = QLineEdit()
+            x.setPlaceholderText("X")
+            
+            y = QLineEdit()
+            y.setPlaceholderText("Y")
+            
+            row.addWidget(x)
+            row.addWidget(y)
+            
+            self.lines.append(row)
 
-        layout = QVBoxLayout()
-        layout.addWidget(self.table)
+        layout = QFormLayout()
+
+        layout.addRow("Name", self.name_lineEdit)
+
+        for line in self.lines:
+            layout.addRow(line)
+
+        add_button = QPushButton("+")
+        # add_button.clicked.connect(self.add_point)
+        # layout.addRow()
+        layout.addRow(self.create_button)
 
         self.setLayout(layout)
-        self.update()
 
-    def selected_index(self):
-        return self.table.currentIndex().row()
+    def create_callback(self):
+        x1 = int(self.x1_lineEdit.text())
+        y1 = int(self.y1_lineEdit.text())
+        x2 = int(self.x2_lineEdit.text())
+        y2 = int(self.y2_lineEdit.text())
 
-    def selection_callback(self):
-        i = self.table.currentIndex().row()
-        self.viewport.selected_shape = self.viewport.get_shape_by_index(i)
+        line = Line(
+            Coord(x1, y1),
+            Coord(x2, y2),
+            self.name_lineEdit.text()
+        )
 
-    def delete_callback(self):
-        selected = self.viewport.selected_shape
-        self.viewport.remove_shape(selected)
-
-    def populate_tree(self):
-        self.table.clearRows()
-
-        for shape in self.viewport.display_file:
-            name = QStandardItem(str(shape.name))
-            types = QStandardItem(shape.__class__.__name__)
-            color = QStandardItem()
-            color.setBackground(QBrush(QColor(*shape.color)))
-            self.table.appendRow([name, types, color])
-
-    def update(self):
-        self.populate_tree()
-        super().update()
-
-class Table(QTreeView):
-    itemSelected = pyqtSignal()
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.model = QStandardItemModel(0, 3)
-        self.setModel(self.model)
-
-    def setHorizontalHeaderLabels(self, *args, **kwargs):
-        self.model.setHorizontalHeaderLabels(*args, **kwargs)
-
-    def appendRow(self, *args, **kwargs):
-        self.model.appendRow(*args, **kwargs)
-
-    def clearRows(self):
-        self.model.removeRows(0, self.model.rowCount())
-
-    def selectionChanged(self, selected, deselected):
-        super().selectionChanged(selected, deselected)
-        self.itemSelected.emit()
-
+        self.add_shape(line)
