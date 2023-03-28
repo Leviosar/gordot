@@ -31,6 +31,14 @@ optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7"
 
 [[package]]
+name = "darkdetect"
+version = "0.7.1"
+description = "Detect OS Dark Mode from Python"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "more-itertools"
 version = "9.1.0"
 description = "More routines for operating on iterables, beyond itertools"
@@ -102,6 +110,17 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "pyqtdarktheme"
+version = "2.1.0"
+description = "Flat dark theme for PySide and PyQt."
+category = "main"
+optional = false
+python-versions = ">=3.7,<3.12"
+
+[package.dependencies]
+darkdetect = ">=0.7.1,<0.8.0"
+
+[[package]]
 name = "pytest"
 version = "5.4.3"
 description = "pytest: simple powerful testing with Python"
@@ -158,13 +177,14 @@ python-versions = "*"
 
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.10"
-content-hash = "f75092b2772222f2d87ddcd15715f3439a94c47e2fb348624f45d997684ff978"
+python-versions = "3.10"
+content-hash = "d8edc74a8e1363240194be81c05c7b4b220b4e85ff7e2762b9528d83a271c0fb"
 
 [metadata.files]
 atomicwrites = []
 attrs = []
 colorama = []
+darkdetect = []
 more-itertools = []
 numpy = []
 packaging = []
@@ -176,6 +196,7 @@ py = [
 pyqt5 = []
 pyqt5-qt5 = []
 pyqt5-sip = []
+pyqtdarktheme = []
 pytest = []
 qtawesome = []
 qtpy = []

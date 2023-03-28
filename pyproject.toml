@@ -5,10 +5,11 @@ description = ""
 authors = ["João Vitor Maia <maia.tostring@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "3.10"
 PyQt5 = "^5.15.9"
 QtAwesome = "^1.2.3"
 numpy = "^1.24.2"
+pyqtdarktheme = "^2.1.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
