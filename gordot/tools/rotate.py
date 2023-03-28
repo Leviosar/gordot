@@ -29,6 +29,6 @@ class RotateTool(QWidget):
         
         angle = self.angle_field.text()
 
-        matrix = Transform.rotate(angle)
+        matrix = Transform.rotate(float(angle))
         state.selected_shape.transform(matrix)
         self.viewport.repaint()
