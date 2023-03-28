@@ -3,8 +3,7 @@ from PyQt5.QtWidgets import QMainWindow, QHBoxLayout, QPushButton, QWidget
 
 from gordot.components import Sidebar
 from gordot.components import Viewport
-from gordot.components.tools import ToolsMenu
-from gordot.menus import ShapeList, ShapeEdit
+from gordot.menus import ShapeList, ShapeEdit, ToolsMenu
 from gordot.tools import ColorTool
 
 class MainWindow(QMainWindow):

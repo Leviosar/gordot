@@ -4,3 +4,7 @@ from gordot.tools.color import ColorTool
 from gordot.tools.translate import TranslateTool
 from gordot.tools.scale import ScaleTool
 from gordot.tools.rotate import RotateTool
+from gordot.tools.object import ObjectTool
+from gordot.tools.point import PointTool
+from gordot.tools.line import LineTool
+from gordot.tools.wireframe import WireframeTool

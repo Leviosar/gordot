@@ -1,7 +1,7 @@
 from PyQt5.QtGui import QColor
 from gordot.shapes import Shape
 
-primary_color: QColor = QColor(0,0,0)
-secondary_color: QColor = QColor(255,255,255)
+primary_color: QColor = QColor(244,175,45)
+secondary_color: QColor = QColor(47,140,163)
 
 selected_shape: Shape = None

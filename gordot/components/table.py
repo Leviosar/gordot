@@ -5,6 +5,8 @@ from PyQt5.QtGui import QStandardItemModel
 class Table(QTreeView):
     itemSelected = pyqtSignal()
 
+    model: QStandardItemModel
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.model = QStandardItemModel(0, 3)

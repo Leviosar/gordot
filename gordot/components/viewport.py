@@ -4,7 +4,8 @@ from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QPainter, QColor, QFont, QBrush, QPen, QPalette, QMouseEvent
 from PyQt5.QtCore import Qt, pyqtSignal
 
-from gordot.shapes import Shape, Point, Line, Triangle
+from gordot import state
+from gordot.shapes import Shape, Point, Line, Triangle, Wireframe
 from gordot.utils import Coord
 from gordot.structures import View
 
@@ -19,7 +20,14 @@ class Viewport(QWidget):
     def __init__(self):
         super(Viewport, self).__init__()
         
-        self.display_file: List[Shape] = []
+        self.display_file: List[Shape] = [
+            Wireframe([
+                Coord(0, 0),
+                Coord(0, 100),
+                Coord(100, 0),
+                Coord(100, 100),
+            ], "A", state.primary_color)
+        ]
 
         self.painter = QPainter()
 
@@ -40,19 +48,19 @@ class Viewport(QWidget):
 
         self.painter.end()
 
-    def resizeEvent(self, event) -> None:
+    def resizeEvent(self, event):
         super().resizeEvent(event)
 
         self.viewport_dimensions = View(0, 0, self.width(), self.height())
         self.window_dimensions = View(0, 0, self.width(), self.height())
 
-    def mouseMoveEvent(self, event: QMouseEvent) -> None:
+    def mouseMoveEvent(self, event: QMouseEvent):
         self.on_mouse_moved.emit(event)
 
-    def mousePressEvent(self, event: QMouseEvent) -> None:
+    def mousePressEvent(self, event: QMouseEvent):
         self.on_mouse_pressed.emit(event)
 
-    def mouseReleaseEvent(self, event: QMouseEvent) -> None:
+    def mouseReleaseEvent(self, event: QMouseEvent):
         self.on_mouse_released.emit(event)
 
     def mouseDoubleClickEvent(self, event: QMouseEvent):
