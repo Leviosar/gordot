@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout
 from PyQt5.QtGui import QStandardItem, QBrush, QColor
 
+from gordot import state
 from gordot.components import Table
 from gordot.components import Viewport
 
@@ -26,7 +27,7 @@ class ShapeList(QWidget):
 
     def selection_callback(self):
         i = self.table.currentIndex().row()
-        # self.viewport.selected_shape = self.viewport.get_shape_by_index(i)
+        state.selected_shape = self.viewport.display_file[i]
 
     def delete_callback(self):
         selected = self.viewport.selected_shape
@@ -39,7 +40,7 @@ class ShapeList(QWidget):
             name = QStandardItem(str(shape.name))
             types = QStandardItem(shape.__class__.__name__)
             color = QStandardItem()
-            color.setBackground(QBrush(QColor(*shape.color)))
+            color.setBackground(QBrush(shape.color))
             self.table.appendRow([name, types, color])
 
     def update(self):

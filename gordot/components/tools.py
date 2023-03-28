@@ -1,77 +1,47 @@
-from PyQt5.QtWidgets import QTabWidget, QWidget, QVBoxLayout, QPushButton, QHBoxLayout, QLabel, QLineEdit, QFormLayout, QTableWidget, QTableWidgetItem, QTreeView
-from PyQt5.QtGui import QStandardItemModel, QColor, QBrush, QStandardItem
+import qtawesome as qta
 
+from PyQt5.QtWidgets import QTabWidget, QWidget, QVBoxLayout, QPushButton, QHBoxLayout, QLabel, QLineEdit, QFormLayout, QTableWidget, QTableWidgetItem, QTreeView
+from PyQt5.QtGui import QStandardItemModel, QColor, QBrush, QStandardItem, QMouseEvent, QIcon
+from PyQt5.QtCore import QSize
+
+from gordot import state
 from gordot.utils import Coord
 from gordot.shapes import Point, Line, Shape, Wireframe
-from gordot.components import Viewport
+from gordot.tools import PanTool, ZoomTool
+from gordot.components import VerticalTabWidget
 from PyQt5.QtCore import Qt, pyqtSignal
+
+from typing import List
 
 class ToolsMenu(QWidget):
     def __init__(self, viewport):
         super().__init__()
 
         tabs = [
+            { "widget": ObjectsCreationTool(viewport), "name": "Objects"},
             { "widget": ZoomTool(viewport), "name": "Zoom"},
             { "widget": PanTool(viewport), "name": "Move"},
-            { "widget": ObjectsCreationTool(viewport), "name": "Objects"},
         ]
 
-        tab_bar = QTabWidget()
-        
+        tab_bar = VerticalTabWidget()
+        tab_bar.setIconSize(QSize(24, 24))
+
         for tab in tabs:
-            tab_bar.addTab(tab["widget"], tab["name"])
+            tab_bar.addTab(tab["widget"], tab["widget"].icon, "")
 
         layout = QVBoxLayout()
         layout.addWidget(tab_bar)
 
         self.setLayout(layout)
 
-class ZoomTool(QWidget):
-    def __init__(self, viewport):
-        super().__init__()
-        
-        self.viewport = viewport
-        
-        self.zoom_in = QPushButton("+")
-        self.zoom_out = QPushButton("-")
-        
-        self.zoom_in.clicked.connect(lambda: self.viewport.zoom_in(0.1))
-        self.zoom_out.clicked.connect(lambda: self.viewport.zoom_out(0.1))
-
-        layout = QHBoxLayout()
-        layout.addWidget(self.zoom_out)
-        layout.addWidget(QLabel("<center><h6>Zoom</h6><\center>"))
-        layout.addWidget(self.zoom_in)
-
-        self.setLayout(layout)
-
-class PanTool(QWidget):
-    def __init__(self, viewport):
-        super().__init__()
-
-        self.viewport = viewport
-
-        self.up = QPushButton("Up")
-        self.down = QPushButton("Down")
-        self.left = QPushButton("Left")
-        self.right = QPushButton("Right")
-
-        self.up.clicked.connect(lambda: self.viewport.move_up(15))
-        self.down.clicked.connect(lambda: self.viewport.move_down(15))
-        self.left.clicked.connect(lambda: self.viewport.move_left(15))
-        self.right.clicked.connect(lambda: self.viewport.move_right(15))
-
-        layout = QVBoxLayout()
-        layout.addWidget(self.up)
-        layout.addWidget(self.down)
-        layout.addWidget(self.left)
-        layout.addWidget(self.right)
-
-        self.setLayout(layout)
-
 class ObjectsCreationTool(QWidget):
+
+    icon: QIcon
+
     def __init__(self, viewport):
         super().__init__()
+
+        self.icon = qta.icon('fa5s.cube')
 
         tabs = [
             { "widget": PointTab(viewport), "name": "Point"},
@@ -128,7 +98,8 @@ class PointTab(ObjectCreatorTab):
 
         point = Point(
             Coord(x, y),
-            self.name_lineEdit.text()
+            self.name_lineEdit.text(),
+            state.primary_color
         )
 
         self.add_shape(point)
@@ -162,57 +133,89 @@ class LineTab(ObjectCreatorTab):
         line = Line(
             Coord(x1, y1),
             Coord(x2, y2),
-            self.name_lineEdit.text()
+            self.name_lineEdit.text(),
+            state.primary_color
         )
 
         self.add_shape(line)
 
 
 class WireframeTab(ObjectCreatorTab):
+
+    fields: List[List[QLineEdit]] = []
+
+    min_points: int = 3
+
+    current_points: int = 0
+
+    fields_layout: QFormLayout
+
     def __init__(self, viewport):
         super().__init__(viewport)
 
-        self.sides = 3
+        self.fields_layout = QFormLayout()
         
-        self.lines = []
-        self.x_lineEdits = []
-        self.y_lineEdits = []
+        for i in range(self.min_points):
+            self.add_point_row(i)
 
-        for i in range(self.sides):
-            row = QHBoxLayout()
-            
-            self.x_lineEdits.append(QLineEdit())
-            self.x_lineEdits[i].setPlaceholderText("X")
-            
-            self.y_lineEdits.append(QLineEdit())
-            self.y_lineEdits[i].setPlaceholderText("Y")
-            
-            row.addWidget(self.x_lineEdits[i])
-            row.addWidget(self.y_lineEdits[i])
-            
-            self.lines.append(row)
+        add_button = QPushButton(qta.icon('fa5s.plus'), '')
+        add_button.clicked.connect(self.add_row_callback)
 
-        layout = QFormLayout()
-
-        layout.addRow("Name", self.name_lineEdit)
-
-        for line in self.lines:
-            layout.addRow(line)
-
-        layout.addRow(self.create_button)
+        layout = QVBoxLayout()
+        layout.addWidget(self.name_lineEdit)
+        layout.addLayout(self.fields_layout)
+        layout.addWidget(add_button)
+        layout.addWidget(self.create_button)
 
         self.setLayout(layout)
+
+    def add_point_row(self, index: int, defaults = ['', '']):
+        self.current_points += 1
+
+        row = QHBoxLayout()
+            
+        x_input = QLineEdit()
+        x_input.setPlaceholderText("X")
+        x_input.setText(defaults[0])
+        
+        y_input = QLineEdit()
+        y_input.setPlaceholderText("Y")
+        y_input.setText(defaults[1])
+
+        delete_button = QPushButton(qta.icon('fa5s.trash'), '')
+        delete_button.clicked.connect(lambda: self.delete_row_callback(row))
+
+        row.addWidget(x_input, 5)
+        row.addWidget(y_input, 5)
+        row.addWidget(delete_button, 2)
+
+        self.fields.append([x_input, y_input])
+
+        self.fields_layout.addRow(row)
+
+
+    def add_row_callback(self):
+        self.add_point_row(len(self.fields))
+
+
+    def delete_row_callback(self, index: int, row: QWidget):
+        if self.current_points <= 3:
+            return
+        
+        self.fields.pop(index)
+        self.fields_layout.removeRow(row)
+
 
     def create_callback(self):
         coords = [
             Coord(
-                int(self.x_lineEdits[i].text()),
-                int(self.y_lineEdits[i].text())
+                int(self.fields[i][0].text()),
+                int(self.fields[i][1].text())
             )
 
-            for i in range(len(self.x_lineEdits))
+            for i in range(len(self.fields))
         ]
 
-        wireframe = Wireframe(coords, self.name_lineEdit.text())
+        wireframe = Wireframe(coords, self.name_lineEdit.text(), state.primary_color)
 
         self.add_shape(wireframe)

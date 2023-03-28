@@ -39,10 +39,18 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "numpy"
+version = "1.24.2"
+description = "Fundamental package for array computing in Python"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[[package]]
 name = "packaging"
 version = "23.0"
 description = "Core utilities for Python packages"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 
@@ -116,6 +124,31 @@ checkqa-mypy = ["mypy (==v0.761)"]
 testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xmlschema"]
 
 [[package]]
+name = "qtawesome"
+version = "1.2.3"
+description = "FontAwesome icons in PyQt and PySide applications"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+qtpy = "*"
+
+[[package]]
+name = "qtpy"
+version = "2.3.0"
+description = "Provides an abstraction layer on top of the various Qt bindings (PyQt5/6 and PySide2/6)."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+packaging = "*"
+
+[package.extras]
+test = ["pytest (>=6,!=7.0.0,!=7.0.1)", "pytest-cov (>=3.0.0)", "pytest-qt"]
+
+[[package]]
 name = "wcwidth"
 version = "0.2.6"
 description = "Measures the displayed width of unicode strings in a terminal"
@@ -126,13 +159,14 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "3aa34c16e69d8f639d5cb3d1c6dfd6ce9c89f9c3cd4cc38eeeb36f3013d95692"
+content-hash = "f75092b2772222f2d87ddcd15715f3439a94c47e2fb348624f45d997684ff978"
 
 [metadata.files]
 atomicwrites = []
 attrs = []
 colorama = []
 more-itertools = []
+numpy = []
 packaging = []
 pluggy = []
 py = [
@@ -143,4 +177,6 @@ pyqt5 = []
 pyqt5-qt5 = []
 pyqt5-sip = []
 pytest = []
+qtawesome = []
+qtpy = []
 wcwidth = []

@@ -1,6 +1,6 @@
 from typing import List, Tuple
 
-from PyQt5.QtGui import QPainter
+from PyQt5.QtGui import QPainter, QColor
 
 from gordot.shapes import Shape
 from gordot.utils import Coord
@@ -10,7 +10,7 @@ class Wireframe(Shape):
 
     coords: List[Coord]
 
-    def __init__(self, coords: List[Coord], name: str, color: Tuple[int, int, int] = (0, 0, 0)):
+    def __init__(self, coords: List[Coord], name: str, color: QColor = QColor(0, 0, 0)):
         super().__init__(name, color)
 
         self.coords = coords
@@ -26,3 +26,8 @@ class Wireframe(Shape):
                 int(current.x), int(current.y),
                 int(next.x), int(next.y)
             )
+
+
+    def transform(self, matrix: Coord):
+        for coord in self.coords:
+            coord @= matrix

@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from PyQt5.QtGui import QPainter
+from PyQt5.QtGui import QPainter, QColor
 
 from gordot.shapes import Shape
 from gordot.utils.coord import Coord
@@ -10,7 +10,7 @@ class Point(Shape):
 
     coord: Coord
 
-    def __init__(self, coord: Coord, name: str, color: Tuple[int, int, int] = (0,0,0)):
+    def __init__(self, coord: Coord, name: str, color: QColor = QColor(0,0,0)):
         self.coord = coord
         super().__init__(name, color)
 
@@ -21,3 +21,6 @@ class Point(Shape):
 
     def move(self, vec: Vec2D) -> None:
         self.coord += vec
+
+    def transform(self, matrix: Coord):
+        self.coord @= matrix

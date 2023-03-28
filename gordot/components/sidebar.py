@@ -1,6 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton
-
-from gordot.components.tools import ToolsMenu
+from PyQt5.QtWidgets import QWidget, QVBoxLayout
 
 from typing import List
 

@@ -4,7 +4,8 @@ from PyQt5.QtWidgets import QMainWindow, QHBoxLayout, QPushButton, QWidget
 from gordot.components import Sidebar
 from gordot.components import Viewport
 from gordot.components.tools import ToolsMenu
-from gordot.menus import ShapeList
+from gordot.menus import ShapeList, ShapeEdit
+from gordot.tools import ColorTool
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -28,11 +29,13 @@ class MainWindow(QMainWindow):
         
         horizontal_layout.addWidget(
             Sidebar([
-                ShapeList(viewport)
+                ColorTool(viewport),
+                ShapeList(viewport),
+                ShapeEdit(viewport)
             ])
         )
 
-        self.resize(1920 // 2, 1080 // 2)
+        self.resize(1920, 1080)
 
         self.setCentralWidget(window)
 
