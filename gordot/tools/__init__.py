@@ -8,3 +8,4 @@ from gordot.tools.object import ObjectTool
 from gordot.tools.point import PointTool
 from gordot.tools.line import LineTool
 from gordot.tools.wireframe import WireframeTool
+from gordot.tools.bezier import BezierTool
