@@ -1,17 +1,23 @@
 import numpy as np
 
-from gordot.utils import Coord
-
 class Transform:
     @classmethod
-    def translate(cls, delta: Coord):
+    def translate(cls, delta):
+        """Returns a translation matrix for a given vector
+
+        Args:
+            delta (Vector)
+
+        Returns:
+            _type_: _description_
+        """
         matrix = np.identity(3)
         matrix[2, 0] = delta.x
         matrix[2, 1] = delta.y
         return matrix
 
     @classmethod
-    def scale(cls, delta: Coord):
+    def scale(cls, delta):
         matrix = np.identity(3)
         matrix[0,0] = delta.x
         matrix[1,1] = delta.y

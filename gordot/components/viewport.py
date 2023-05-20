@@ -6,8 +6,8 @@ from PyQt5.QtCore import Qt, pyqtSignal
 
 from gordot import state
 from gordot.shapes import Shape, Point, Line, Triangle, Wireframe
-from gordot.utils import Coord
-from gordot.structures import View
+from gordot.structures import Vector
+from gordot.structures import View, DisplayFile
 
 class Viewport(QWidget):
 
@@ -20,39 +20,50 @@ class Viewport(QWidget):
     def __init__(self):
         super(Viewport, self).__init__()
         
-        self.display_file: List[Shape] = [
-            Wireframe([
-                Coord(0, 0),
-                Coord(0, 100),
-                Coord(100, 0),
-                Coord(100, 100),
+        self.display_file = DisplayFile()
+        self.display_file.items.append(Wireframe([
+                Vector(0, 0),
+                Vector(0, 100),
+                Vector(100, 0),
+                Vector(100, 100),
             ], "A", state.primary_color)
-        ]
+        )
 
         self.painter = QPainter()
 
 
     def add_shape(self, shape: Shape):
-        self.display_file.append(shape)
+        self.display_file.items.append(shape)
         self.display_file_changed.emit()
         self.repaint()
 
     def paintEvent(self, event):
         self.painter.begin(self)
 
-        for shape in self.display_file:
+        for shape in self.display_file.projected_shapes(self.window_dimensions, self.viewport_dimensions):
             self.painter.setPen(initPen(shape.color))
             self.painter.setBrush(initBrush(shape.color))
 
-            shape.draw(self.painter, self.viewport_dimensions, self.window_dimensions)
+            shape.draw(self.painter)
 
         self.painter.end()
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
 
-        self.viewport_dimensions = View(0, 0, self.width(), self.height())
-        self.window_dimensions = View(0, 0, self.width(), self.height())
+        self.viewport_dimensions = View(
+            Vector(0, self.height()),
+            Vector(self.width(), self.height()),
+            Vector(0, 0),
+            Vector(self.width(), 0),
+        )
+        
+        self.window_dimensions = View(
+            Vector(0, self.height()),
+            Vector(self.width(), self.height()),
+            Vector(0, 0),
+            Vector(self.width(), 0),
+        )
 
     def mouseMoveEvent(self, event: QMouseEvent):
         self.on_mouse_moved.emit(event)
@@ -76,59 +87,37 @@ class Viewport(QWidget):
         self.setPalette(palette)
 
     def move_up(self, pixels: int):
-        self.window_dimensions.ymin -= pixels
-        self.window_dimensions.ymax -= pixels
-
+        self.window_dimensions.move(Vector(0, -pixels))
         self.repaint()
 
     def move_down(self, pixels: int):
-        self.window_dimensions.ymin += pixels
-        self.window_dimensions.ymax += pixels
-
+        self.window_dimensions.move(Vector(0, pixels))
         self.repaint()
 
     def move_left(self, pixels: int):
-        self.window_dimensions.xmin += pixels
-        self.window_dimensions.xmax += pixels
-
+        self.window_dimensions.move(Vector(pixels, 0))
         self.repaint()
     
     def move_right(self, pixels: int):
-        self.window_dimensions.xmin -= pixels
-        self.window_dimensions.xmax -= pixels
-
+        self.window_dimensions.move(Vector(-pixels, 0))
         self.repaint()
 
-    def pan(self, direction: Coord):
-        self.window_dimensions.xmin -= direction.x
-        self.window_dimensions.xmax -= direction.x
-        self.window_dimensions.ymin += direction.y
-        self.window_dimensions.ymax += direction.y
-        
+    def pan(self, direction: Vector):
+        print(direction)
+        self.window_dimensions.move(direction)
         self.repaint()
 
     def zoom_in(self, factor):
-        w = self.window_dimensions.width() * factor / 2
-        h = self.window_dimensions.height() * factor / 2
-
-        self.window_dimensions.xmin += w
-        self.window_dimensions.xmax -= w
-        self.window_dimensions.ymin += h
-        self.window_dimensions.ymax -= h
-
+        self.window_dimensions.zoom(1 / factor)
         self.repaint()
 
     def zoom_out(self, factor):
-        w = self.window_dimensions.width() * factor / 2
-        h = self.window_dimensions.height() * factor / 2
-
-        self.window_dimensions.xmin -= w
-        self.window_dimensions.xmax += w
-        self.window_dimensions.ymin -= h
-        self.window_dimensions.ymax += h
-
+        self.window_dimensions.zoom(factor)
         self.repaint()
 
+    def rotate(self, angle):
+        self.window_dimensions.rotate(angle)
+        self.repaint()
 
 def initPen(color: QColor) -> QPen:
     pen = QPen()

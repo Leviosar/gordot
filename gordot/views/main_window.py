@@ -1,9 +1,8 @@
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtWidgets import QMainWindow, QHBoxLayout, QPushButton, QWidget
 
-from gordot.components import Sidebar
-from gordot.components import Viewport
-from gordot.menus import ShapeList, ShapeEdit, ToolsMenu
+from gordot.components import Sidebar, Viewport
+from gordot.menus import ShapeList, ShapeEdit, ToolsMenu, UpperMenu
 from gordot.tools import ColorTool
 
 class MainWindow(QMainWindow):
@@ -38,3 +37,4 @@ class MainWindow(QMainWindow):
 
         self.setCentralWidget(window)
 
+        self.setMenuBar(UpperMenu(self, viewport))

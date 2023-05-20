@@ -4,8 +4,8 @@ from PyQt5.QtWidgets import QTabWidget, QWidget, QVBoxLayout, QPushButton, QHBox
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize
 
-from gordot.utils import Coord
-from gordot.tools import PanTool, ZoomTool, PointTool, LineTool, WireframeTool, BezierTool
+from gordot.structures import Vector
+from gordot.tools import PanTool, ZoomTool, PointTool, LineTool, WireframeTool, BezierTool, RotateViewportTool
 from gordot.components import VerticalTabWidget
 
 from typing import List
@@ -18,6 +18,7 @@ class ToolsMenu(QWidget):
             { "widget": ObjectsCreationTool(viewport), "name": "Objects"},
             { "widget": ZoomTool(viewport), "name": "Zoom"},
             { "widget": PanTool(viewport), "name": "Move"},
+            { "widget": RotateViewportTool(viewport), "name": "Rotate"},
         ]
 
         tab_bar = VerticalTabWidget()

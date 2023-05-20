@@ -6,7 +6,7 @@ from typing import List
 
 from gordot import state
 from gordot.shapes import Wireframe
-from gordot.utils import Coord
+from gordot.structures import Vector
 from gordot.tools import ObjectTool
 from gordot.components import Viewport
 
@@ -78,7 +78,7 @@ class WireframeTool(ObjectTool):
 
     def create_callback(self):
         coords = [
-            Coord(
+            Vector(
                 int(self.fields[i][0].text()),
                 int(self.fields[i][1].text())
             )

@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QLineEdit, QFormLayout
 
 from gordot import state
 from gordot.shapes import Line
-from gordot.utils import Coord
+from gordot.structures import Vector
 from gordot.tools import ObjectTool
 from gordot.components import Viewport
 
@@ -32,8 +32,8 @@ class LineTool(ObjectTool):
         y2 = int(self.y2_input.text())
 
         line = Line(
-            Coord(x1, y1),
-            Coord(x2, y2),
+            Vector(x1, y1),
+            Vector(x2, y2),
             self.name_input.text(),
             state.primary_color
         )

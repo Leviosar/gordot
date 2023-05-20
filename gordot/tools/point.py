@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QLineEdit, QFormLayout
 
 from gordot import state
 from gordot.shapes import Point
-from gordot.utils import Coord
+from gordot.structures import Vector
 from gordot.tools import ObjectTool
 from gordot.components import Viewport
 
@@ -26,7 +26,7 @@ class PointTool(ObjectTool):
         y = int(self.y_input.text())
 
         point = Point(
-            Coord(x, y),
+            Vector(x, y),
             self.name_input.text(),
             state.primary_color
         )

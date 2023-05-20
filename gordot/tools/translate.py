@@ -2,7 +2,8 @@ from PyQt5.QtWidgets import QWidget, QLineEdit, QFormLayout, QPushButton, QHBoxL
 
 from gordot import state
 from gordot.components import Viewport
-from gordot.utils import Transform, Coord
+from gordot.utils import Transform
+from gordot.structures import Vector
 
 class TranslateTool(QWidget):
     def  __init__(self, viewport: Viewport):
@@ -34,7 +35,7 @@ class TranslateTool(QWidget):
         x = self.x_field.text()
         y = self.y_field.text()
 
-        delta = Coord(x, y)
+        delta = Vector(x, y)
         matrix = Transform.translate(delta)
         state.selected_shape.transform(matrix)
         self.viewport.repaint()

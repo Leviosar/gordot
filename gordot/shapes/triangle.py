@@ -3,15 +3,15 @@ from typing import Tuple
 from PyQt5.QtGui import QPainter
 
 from gordot.shapes import Shape
-from gordot.utils import Coord
+from gordot.structures import Vector
 
 class Triangle(Shape):
 
-    coord1: Coord
-    coord2: Coord
-    coord3: Coord
+    coord1: Vector
+    coord2: Vector
+    coord3: Vector
 
-    def __init__(self, coord1: Coord, coord2: Coord, coord3: Coord, name: str, color: Tuple[int, int, int] = (0, 0, 0)):
+    def __init__(self, coord1: Vector, coord2: Vector, coord3: Vector, name: str, color: Tuple[int, int, int] = (0, 0, 0)):
         super().__init__(name, color)
 
         self.coord1 = coord1

@@ -1,7 +1,7 @@
 import qtawesome as qta
 
 from gordot.components import Viewport
-from gordot.utils import Coord
+from gordot.structures import Vector
 
 from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout
 from PyQt5.QtGui import QMouseEvent, QIcon
@@ -25,14 +25,12 @@ class PanTool(QWidget):
 
     def start(self, event: QMouseEvent):
         self.started = True
-        self.last_point = Coord(event.x(), event.y())
+        self.last_point = event.pos()
 
     def move_(self, event: QMouseEvent):
         if not self.started:
             return
         
-        current = Coord(event.x(), event.y())
-
-        self.viewport.pan(current - self.last_point)
-        
-        self.last_point = current
+        delta = self.last_point - event.pos()
+        self.last_point = event.pos()
+        self.viewport.pan(Vector(delta.x(), - delta.y()))
