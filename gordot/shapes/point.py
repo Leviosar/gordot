@@ -37,3 +37,12 @@ class Point(Shape):
         
     def viewport_transform(self, origin: 'View', destiny: 'View'):
         return Point(self.coord.viewport_transform(origin, destiny), self.name, self.color)
+    
+    def clip(self, view: 'View'):
+        in_x = view.min().x < self.coord.x < view.max().x
+        in_y = view.min().y < self.coord.y < view.max().y
+
+        if in_x and in_y:
+            return self
+        else:
+            return None

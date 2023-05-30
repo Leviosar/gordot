@@ -6,6 +6,7 @@ from gordot.shapes import Shape
 from gordot.structures import Vector
 from gordot.structures import View, Vector
 
+
 class Line(Shape):
 
     start: Vector
@@ -16,18 +17,12 @@ class Line(Shape):
 
         self.start = start
         self.end = end
-    
+
     def points(self) -> List[Vector]:
         return [self.start, self.end]
 
     def draw(self, painter: QPainter):
-        start = self.start
-        end = self.end
-
-        painter.drawLine(
-            int(start.x), int(start.y),
-            int(end.x), int(end.y)
-        )
+        self.draw_clipped(painter)
 
     def move(self, vec: Vector):
         self.start += vec
@@ -50,3 +45,9 @@ class Line(Shape):
         start = self.start.viewport_transform(origin, destiny)
         end = self.end.viewport_transform(origin, destiny)
         return Line(start, end, self.name, self.color)
+    
+    def clip(self, view: 'View'):
+        from gordot.clipping.liang_barsky import liang_barsky
+        # EU NÃO SEI RESOLVER CIRCULAR IMPORTS AAAAAAA
+
+        return liang_barsky(self, view)

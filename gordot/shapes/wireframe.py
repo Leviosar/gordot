@@ -51,3 +51,8 @@ class Wireframe(Shape):
     def transform(self, matrix: Vector):
         for coord in self.coords:
             coord @= matrix
+
+    def clip(self, view: View):
+        from gordot.clipping.sutherland_hodgeman import sutherland_hodgeman
+        
+        return sutherland_hodgeman(self, view)

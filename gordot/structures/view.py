@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from PyQt5.QtGui import QPainter, QColor
 
 from gordot.structures import Vector
 from gordot.utils import Transform
@@ -92,6 +93,28 @@ class View:
         self.p1 @= matrix
         self.p2 @= matrix
         self.p3 @= matrix
+
+    def draw(self, painter: QPainter):
+        painter.drawLine(
+            int(self.p0.x), int(self.p0.y),
+            int(self.p1.x), int(self.p1.y),
+        )
+
+        painter.drawLine(
+            int(self.p1.x), int(self.p1.y),
+            int(self.p3.x), int(self.p3.y),
+        )
+
+        painter.drawLine(
+            int(self.p3.x), int(self.p3.y),
+            int(self.p2.x), int(self.p2.y),
+        )
+
+        painter.drawLine(
+            int(self.p2.x), int(self.p2.y),
+            int(self.p0.x), int(self.p0.y),
+        )
+
     
     def __str__(self) -> str:
         return f"""View(
