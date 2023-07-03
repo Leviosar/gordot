@@ -4,3 +4,4 @@ from gordot.shapes.line import Line
 from gordot.shapes.triangle import Triangle
 from gordot.shapes.wireframe import Wireframe
 from gordot.shapes.bezier import Bezier
+from gordot.shapes.bspline import BSpline
