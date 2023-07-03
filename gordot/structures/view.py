@@ -55,24 +55,11 @@ class View:
         delta.rotate(-a)
         
         matrix = Transform.translate(delta)
-        print('pré trans')
-        print([
-            self.p0,
-            self.p1,
-            self.p2,
-            self.p3,
-        ])
+
         self.p0 @= matrix
         self.p1 @= matrix
         self.p2 @= matrix
         self.p3 @= matrix
-        print('pós trans')
-        print([
-            self.p0,
-            self.p1,
-            self.p2,
-            self.p3,
-        ])
         
     def zoom(self, amount, around=None):
         around = self.center()

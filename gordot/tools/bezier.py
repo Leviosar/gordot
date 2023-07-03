@@ -14,7 +14,7 @@ class BezierTool(ObjectTool):
 
     fields: List[List[QLineEdit]] = []
 
-    min_points: int = 3
+    min_points: int = 4
 
     current_points: int = 0
 
@@ -25,8 +25,7 @@ class BezierTool(ObjectTool):
 
         self.fields_layout = QFormLayout()
         
-        for i in range(self.min_points):
-            self.add_point_row(i)
+        self.add_point_rows()
 
         add_button = QPushButton(qta.icon('fa5s.plus'), '')
         add_button.clicked.connect(self.add_row_callback)
@@ -39,15 +38,19 @@ class BezierTool(ObjectTool):
 
         self.setLayout(layout)
 
+    def add_point_rows(self):
+        for i in range(self.min_points):
+            self.add_point_row(i)
+
     def add_point_row(self, index: int, defaults = ['', '']):
         self.current_points += 1
 
         row = QHBoxLayout()
-            
+
         x_input = QLineEdit()
         x_input.setPlaceholderText("X")
         x_input.setText(defaults[0])
-        
+
         y_input = QLineEdit()
         y_input.setPlaceholderText("Y")
         y_input.setText(defaults[1])

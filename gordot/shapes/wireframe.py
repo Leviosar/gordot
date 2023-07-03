@@ -7,13 +7,16 @@ from gordot.structures import Vector
 from gordot.structures import View
 
 class Wireframe(Shape):
+    CLOSED = 0
+    OPEN = 1
 
     coords: List[Vector]
 
-    def __init__(self, coords: List[Vector], name: str, color: QColor = QColor(0, 0, 0)):
+    def __init__(self, coords: List[Vector], name: str, color: QColor = QColor(0, 0, 0), style = CLOSED):
         super().__init__(name, color)
 
         self.coords = coords
+        self.style = style
 
     def points(self) -> List[Vector]:
         return self.coords
@@ -21,7 +24,7 @@ class Wireframe(Shape):
     def draw(self, painter: QPainter):
         num_coords = len(self.coords)
 
-        for i in range(num_coords):
+        for i in range(num_coords - self.style):
             current = self.coords[i]
             next = self.coords[(i + 1) % num_coords]
 
