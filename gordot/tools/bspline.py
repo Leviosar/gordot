@@ -5,12 +5,11 @@ from PyQt5.QtWidgets import QWidget, QLineEdit, QFormLayout, QVBoxLayout, QHBoxL
 from typing import List
 
 from gordot import state
-from gordot.shapes import Bezier
+from gordot.shapes import BSpline
 from gordot.structures import Vector
 from gordot.tools import ObjectTool
-from gordot.components import Viewport
 
-class BezierTool(ObjectTool):
+class BSplineTool(ObjectTool):
 
     fields: List[List[QLineEdit]] = []
 
@@ -89,6 +88,6 @@ class BezierTool(ObjectTool):
             for i in range(len(self.fields))
         ]
 
-        bezier = Bezier(coords, self.name_input.text(), state.primary_color)
+        bezier = BSpline(coords, self.name_input.text(), state.primary_color)
 
         self.add_shape(bezier)

@@ -42,7 +42,7 @@ class Shape:
         
     def viewport_transform(self, origin: 'View', destiny: 'View') -> 'Shape':
         raise "Implementa ai fera"
-        
+
     def draw(self, painter: QPainter, viewport, window):
         raise "Implementa ai fera"
 

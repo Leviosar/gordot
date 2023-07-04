@@ -5,7 +5,7 @@ from PyQt5.QtGui import QPainter, QColor, QFont, QBrush, QPen, QPalette, QMouseE
 from PyQt5.QtCore import Qt, pyqtSignal
 
 from gordot import state
-from gordot.shapes import Shape, Point, Line, Triangle, Wireframe
+from gordot.shapes import Shape, Wireframe
 from gordot.structures import Vector
 from gordot.structures import View, DisplayFile
 
@@ -106,7 +106,6 @@ class Viewport(QWidget):
         self.repaint()
 
     def pan(self, direction: Vector):
-        print(direction)
         self.window_dimensions.move(direction)
         self.repaint()
 

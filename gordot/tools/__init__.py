@@ -10,5 +10,6 @@ from gordot.tools.point import PointTool
 from gordot.tools.line import LineTool
 from gordot.tools.wireframe import WireframeTool
 from gordot.tools.bezier import BezierTool
+from gordot.tools.bspline import BSplineTool
 from gordot.tools.file_export import FileExportTool
 from gordot.tools.file_import import FileImportTool

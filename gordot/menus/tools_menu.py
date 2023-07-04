@@ -5,7 +5,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize
 
 from gordot.structures import Vector
-from gordot.tools import PanTool, ZoomTool, PointTool, LineTool, WireframeTool, BezierTool, RotateViewportTool
+from gordot.tools import PanTool, ZoomTool, PointTool, LineTool, WireframeTool, BezierTool, BSplineTool, RotateViewportTool
 from gordot.components import VerticalTabWidget
 
 from typing import List
@@ -46,6 +46,7 @@ class ObjectsCreationTool(QWidget):
             { "widget": LineTool(viewport), "name": "Line"},
             { "widget": WireframeTool(viewport), "name": "Wireframe"},
             { "widget": BezierTool(viewport), "name": "Bezier"},
+            { "widget":  BSplineTool(viewport), "name": "BSpline (Forward Difference)"}
         ]
 
         tab_bar = QTabWidget()

@@ -6,11 +6,11 @@ from gordot.shapes import Shape, Wireframe
 from gordot.shapes.shape import Shape
 from gordot.structures import Vector, View
 
-from gordot.utils import make_bezier_points
+from gordot.utils import make_fd_bspline_points
 
-BEZIER_RESOLUTION = 25
+BSPLINE_RESOLUTION = 25
 
-class Bezier(Shape):
+class BSpline(Shape):
 
     control_points: List[Vector]
 
@@ -29,22 +29,21 @@ class Bezier(Shape):
     def make_drawable_points(self) -> List[Vector]:
         drawable_points: List[Vector] = []
 
-        for points in self.packed_points():
-            for i in range(BEZIER_RESOLUTION + 1):
-                x, y, z = make_bezier_points(i / BEZIER_RESOLUTION, points)
+        for point in self.packed_points():
+            for x, y, z in make_fd_bspline_points(point, BSPLINE_RESOLUTION):
                 drawable_points.append(Vector(x, y, z))
 
         return drawable_points
 
     ## Pack the control points in packs of 4
     def packed_points(self) -> Iterator[List[Vector]]:
-        for i in range(0, len(self.control_points) - 1, 3):
+        for i in range(len(self.control_points) - 3):
             yield self.control_points[i : (i + 4)]
 
     def transform(self, matrix: Vector):
         for coord in self.control_points:
             coord @= matrix
 
-    def viewport_transform(self, origin: View, destiny: View) -> 'Bezier':
+    def viewport_transform(self, origin: View, destiny: View) -> 'BSpline':
         points = [point.viewport_transform(origin, destiny) for point in self.control_points]
-        return Bezier(points, self.name, self.color)
+        return BSpline(points, self.name, self.color)
