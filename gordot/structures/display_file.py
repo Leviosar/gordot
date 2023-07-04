@@ -33,5 +33,22 @@ class DisplayFile:
         
         return shapes
     
+    def clipped_shapes(self, origin: View, target: View) -> List['Shape']:
+        a = self.projected_shapes(origin, target)
+        
+        shapes = [
+            shape.clip(target) 
+            for shape in a
+        ]
+
+        # Filter Nones >=)
+        shapes = [
+            shape for shape in shapes 
+            if shape is not None
+        ]
+        
+        return shapes
+
+    
     def __getitem__(self, item):
         return self.items[item]

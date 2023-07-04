@@ -40,22 +40,25 @@ class Viewport(QWidget):
     def paintEvent(self, event):
         self.painter.begin(self)
 
-        for shape in self.display_file.projected_shapes(self.window_dimensions, self.viewport_dimensions):
+        for shape in self.display_file.clipped_shapes(self.window_dimensions, self.viewport_dimensions):
             self.painter.setPen(initPen(shape.color))
             self.painter.setBrush(initBrush(shape.color))
 
             shape.draw(self.painter)
 
+        self.viewport_dimensions.draw(self.painter)
         self.painter.end()
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
 
+        border = 30
+
         self.viewport_dimensions = View(
-            Vector(0, self.height()),
-            Vector(self.width(), self.height()),
-            Vector(0, 0),
-            Vector(self.width(), 0),
+            Vector(0 + border, self.height() - border),
+            Vector(self.width() - border, self.height() - border),
+            Vector(0 + border, 0 + border),
+            Vector(self.width() - border, 0 + border),
         )
         
         self.window_dimensions = View(

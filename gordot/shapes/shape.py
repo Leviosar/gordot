@@ -51,3 +51,6 @@ class Shape:
 
     def export(self, index: int):
         raise "Implementa ai fera"
+    
+    def clip(self, view: 'View'):
+        return self
